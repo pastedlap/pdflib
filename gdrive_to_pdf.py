@@ -11,6 +11,7 @@ from io import StringIO
 import io,os,codecs
 
 #=========================================================
+#CONCERT THE PDF STREAM TO UTF8 TEXT
 def pdf_to_text2(fstream):
         rsrcmgr = PDFResourceManager()
         sio = StringIO()
@@ -30,7 +31,10 @@ def pdf_to_text2(fstream):
         sio.close()
         return text
 
-#=========================================================
+"""
+=========================================================
+CONVERT ALL THE PDF FILES IN THE GIVEN FOLDER INTO UTF8 TXT FILESS
+"""
 def processFolder(folder_id,service):
     if not os.path.exists(folder_id):os.mkdir(folder_id)
      # Call the Drive v3 API
@@ -63,21 +67,18 @@ def processFolder(folder_id,service):
 #===========================================
 
 def main(folder_id):
+    #create a connection to google drive.
     store = file.Storage('token.json')
     creds = store.get()
     if not creds or creds.invalid:
-        flow = client.flow_from_clientsecrets('credentials.json', SCOPES)
+        flow = client.flow_from_clientsecrets('credentials.json', 'https://www.googleapis.com/auth/drive.readonly')
         creds = tools.run_flow(flow, store)
     service = build('drive', 'v3', http=creds.authorize(Http()))
-
+    
     processFolder(folder_id, service)
 
 #===========================================
 
-# If modifying these scopes, delete the file token.json.
-SCOPES = 'https://www.googleapis.com/auth/drive.readonly'
-folder_id='1RyntetHv4TORxfkW7Ayf4osw6vjcIrdL'
-#===========================================
-
 if __name__ == '__main__':
+    folder_id='1RyntetHv4TORxfkW7Ayf4osw6vjcIrdL'
     main(folder_id)
